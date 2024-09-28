@@ -1,0 +1,31 @@
+div.dataTables_info {
+    font-size: 12px;
+}
+
+div.dataTables_filter input {
+    font-size: 12px;
+    height: 30px;
+    width: 150px;
+}
+
+div.dataTables_paginate a {
+    font-size: 12px;
+}
+
+div.dataTables_length select {
+    font-size: 12px;
+    height: 30px;
+}
+
+.dataTables_wrapper .dataTables_filter input {
+    font-size: 14px;
+}
+
+.dataTables_wrapper .dataTables_length select {
+    font-size: 14px;
+}
+
+.dataTables_wrapper .dataTables_filter label,
+.dataTables_wrapper .dataTables_length label {
+    font-size: 14px;
+}

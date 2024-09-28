@@ -1,75 +1,62 @@
 @extends('admin.layouts.app')
 
 @section('content')
-    <div class="app-content-header">
+    <div class="content-wrapper">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-sm-6">
+                <div class="col-sm-12">
                     <h3 class="mb-0">Data Mahasiswa</h3>
-                </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-end">
-                        <li class="breadcrumb-item"><a href="{{ url('dashboard-admin') }}">Home</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">
-                            Data Mahasiswa
-                        </li>
-                    </ol>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="container-fluid mt-3">
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
+                    <div class="container mt-3">
+                        @if (session('success'))
+                            <div class="alert alert-success">
+                                {{ session('success') }}
+                            </div>
+                        @endif
 
-        @if (session('error'))
-            <div class="alert alert-danger">
-                {{ session('error') }}
-            </div>
-        @endif
-    </div>
-    <div class="app-content">
-        <div class="container-fluid">
-            <div class="row">
+                        @if (session('error'))
+                            <div class="alert alert-danger">
+                                {{ session('error') }}
+                            </div>
+                        @endif
+                    </div>
+                </div>
                 <div class="card">
-                    <div class="card-header">
+                    <div class="container mt-4 pl-3">
                         <div class="row">
-                            <h3 class="card-title mb-3">Data Mahasiswa</h1>
-                                <div class="col-md-6">
-                                    <a href="#" type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                                        data-bs-target="#tambahModal">
-                                        <i class="bi bi-person-add"></i> Tambah
-                                    </a>
-                                    <a href="{{ url('dashboard-admin/mahasiswa/import') }}" type="button"
-                                        class="btn btn-success btn-sm"><i class="bi bi-box-arrow-right"></i> Import</a>
-                                </div>
+                            <div class="col-md-6">
+                                <a href="#" type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                    data-bs-target="#tambahModal">
+                                    <i class="bi bi-person-add"></i> Tambah
+                                </a>
+                                <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#uploadExcelModal"
+                                    class="btn btn-secondary btn-sm">
+                                    <i class="bi bi-upload"></i> Import
+                                </a>
+                            </div>
                         </div>
                     </div>
                     <div class="card-body">
-                        <table id="example2" class="table table-bordered table-striped">
+                        <table id="user-admin" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
-                                    <th>NO</th>
-                                    <th>Nama</th>
-                                    <th>NIM</th>
-                                    <th>Email</th>
-                                    <th>Prodi</th>
-                                    <th>Status</th>
-                                    <th>Aksi</th>
+                                    <th class="small-width text-center">NO</th>
+                                    <th class="text-center">NIM</th>
+                                    <th class="text-center">Nama</th>
+                                    <th class="text-center">Email</th>
+                                    <th class="text-center">Prodi</th>
+                                    <th class="text-center">Status</th>
+                                    <th class="text-center">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($mahasiswas as $mahasiswa)
                                     <tr>
-                                        <td>{{ $loop->iteration }}</td>
+                                        <td class="text-center">{{ $loop->iteration }}</td>
+                                        <td class="text-center">{{ $mahasiswa->nim }}</td>
                                         <td>{{ $mahasiswa->nama_lengkap }}</td>
-                                        <td>{{ $mahasiswa->nim }}</td>
-                                        <td>{{ $mahasiswa->email }}</td>
-                                        <td>{{ $mahasiswa->program_studi }}</td>
-                                        <td>
+                                        <td class="text-center">{{ $mahasiswa->email }}</td>
+                                        <td class="text-center">{{ $mahasiswa->program_studi }}</td>
+                                        <td class="text-center">
                                             @if ($mahasiswa->status === 'aktif')
                                                 <span class="badge text-bg-success">{{ $mahasiswa->status }}</span>
                                             @elseif ($mahasiswa->status === 'cuti')
@@ -79,15 +66,16 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <a href="#" type="button" class="btn btn-warning" data-bs-toggle="modal"
-                                                data-bs-target="#editModal" onclick="openEditModal({{ $mahasiswa }})">
+                                            <a href="#" type="button" class="btn btn-sm btn-warning"
+                                                data-bs-toggle="modal" data-bs-target="#editModal"
+                                                onclick="openEditModal({{ $mahasiswa }})">
                                                 <i class="bi bi-pencil-square"></i>
                                             </a>
                                             <form action="{{ url('dashboard-admin/mahasiswa/delete/' . $mahasiswa->id) }}"
                                                 method="POST" style="display:inline;" id="deleteForm{{ $mahasiswa->id }}">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger deleteBtn"
+                                                <button type="button" class="btn btn-sm btn-danger deleteMhs"
                                                     data-id="{{ $mahasiswa->id }}">
                                                     <i class="bi bi-trash3-fill"></i>
                                                 </button>
@@ -96,16 +84,6 @@
                                     </tr>
                                 @endforeach
                             </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th>NO</th>
-                                    <th>Nama</th>
-                                    <th>NIM</th>
-                                    <th>Email</th>
-                                    <th>Status</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -169,7 +147,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editModalLabel">Edit Tenaga Kependidikan</h5>
+                    <h5 class="modal-title" id="editModalLabel">Edit Mahasiswa</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -191,11 +169,8 @@
                             <input type="email" class="form-control" id="editEmail" name="email" required>
                         </div>
                         <div class="mb-3">
-                            <label for="prodi" class="form-label">Program Studi</label>
-                            <select class="form-select" id="prodi" name="program_studi" required>
-                                <option value="{{ $mahasiswa->program_studi }}" selected disabled>
-                                    {{ $mahasiswa->program_studi }}
-                                </option>
+                            <label for="editProdi" class="form-label">Program Studi</label>
+                            <select class="form-select" id="editProdi" name="program_studi" required>
                                 <option value="Matematika">Matematika</option>
                                 <option value="Sistem Informasi">Sistem Informasi</option>
                                 <option value="Informatika">Informatika</option>
@@ -218,12 +193,47 @@
             </div>
         </div>
     </div>
+
+    {{-- Modal Import --}}
+    <div class="modal fade" id="uploadExcelModal" tabindex="-1" role="dialog" aria-labelledby="uploadExcelModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="uploadExcelModalLabel">Upload Users via Excel
+                    </h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('mhsimport') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="form-group">
+                            <label for="excelFile">Upload Excel File</label>
+                            <input type="file" class="form-control" id="excelFile" name="file"
+                                accept=".xls,.xlsx"required>
+                        </div>
+                        <div>
+                            <h6>Template dapat di unduh : <a href="{{ asset('excel/mhs/user.xlsx') }}" download>Template
+                                    User</a></h6>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Upload</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
         function openEditModal(mahasiswa) {
             document.getElementById('editId').value = mahasiswa.id;
             document.getElementById('editNamaLengkap').value = mahasiswa.nama_lengkap;
             document.getElementById('editNIM').value = mahasiswa.nim;
             document.getElementById('editEmail').value = mahasiswa.email;
+            document.getElementById('editProdi').value = mahasiswa.program_studi;
             document.getElementById('editForm').action = `/dashboard-admin/mahasiswa/${mahasiswa.id}/update`;
         }
 
@@ -246,9 +256,9 @@
         });
 
         document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.deleteTendik').forEach(button => {
+            document.querySelectorAll('.deleteMhs').forEach(button => {
                 button.addEventListener('click', function() {
-                    const tendikId = this.getAttribute('data-id');
+                    const mahasiswaId = this.getAttribute('data-id');
 
                     Swal.fire({
                         title: 'Are you sure?',
@@ -260,7 +270,7 @@
                         confirmButtonText: 'Yes, delete it!'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            document.getElementById(`deleteForm${tendikId}`).submit();
+                            document.getElementById(`deleteForm${mahasiswaId}`).submit();
                         }
                     });
                 });

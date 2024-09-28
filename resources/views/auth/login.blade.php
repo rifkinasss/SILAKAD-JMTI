@@ -6,58 +6,105 @@
             {{ session('status') }}
         </div>
     @endif
-    <div class="card card-outline card-primary">
-        <div class="card-header">
-            <a href="http://s.itk.ac.id/LayananJMTI"
-                class="link-dark text-center link-offset-2 link-opacity-100 link-opacity-50-hover"
-                style="text-decoration: none;">
-                <h1 class="mb-0" style="text-decoration: none;"> <img src="{{ asset('assets/img/LogoJMTI.png') }}"
-                        alt="Logo JMTI" height="50px">
-                    SILAKAD JMTI
-                </h1>
-            </a>
+    @if (session('error'))
+        <div class="mb-4 font-medium text-sm text-red-600">
+            {{ session('error') }}
         </div>
-        <div class="card-body login-card-body">
-            <p class="login-box-msg">Masuk untuk memulai layanan!</p>
-            <form action="{{ route('login') }}" method="POST">
-                @csrf
-                <div class="input-group mb-3">
-                    <div class="form-floating">
-                        <input id="loginEmail" type="text" name="identifier" class="form-control"
-                            value="{{ old('identifier') }}" placeholder="Masukkan Username">
-                        <label for="loginEmail">Email</label>
+    @endif
+    <style>
+        @media (max-width: 767px) {
+            .bg-image {
+                display: none;
+            }
+
+            .auth-form-light {
+                margin: auto;
+                width: 90vw;
+                padding: 2rem;
+            }
+        }
+
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .bg-image {
+                display: none;
+            }
+
+            .auth-form-light {
+                margin: auto;
+                width: 70vw;
+                padding: 2rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .bg-image {
+                display: block;
+            }
+
+            .auth-form-light {
+                margin: auto;
+                width: 100%;
+                padding: 2rem;
+            }
+        }
+
+        .left-shadow {
+            box-shadow: -10px 0px 15px -5px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+    <div class="container-fluid page-body-wrapper full-page-wrapper">
+        <div class="content-wrapper-login d-flex align-items-center auth px-0">
+            <div class="row w-100 mx-0">
+                <div class="col-lg-8 p-0">
+                    <div class="bg-image">
+                        <img src="{{ asset('assets/img/login/depan.jpg') }}"
+                            style="height: 100vh; object-fit: cover; width: 100%;" alt="Branding Logo">
                     </div>
-                    <div class="input-group-text"> <span class="bi bi-envelope"></span> </div>
                 </div>
-                <div class="input-group mb-3">
-                    <div class="form-floating">
-                        <input id="loginPassword" type="password" name="password" class="form-control"
-                            placeholder="Masukkan Password">
-                        <label for="loginPassword">Password</label>
-                    </div>
-                    <div class="input-group-text"> <span class="bi bi-lock-fill"></span> </div>
-                </div>
-                <div class="row">
-                    <div class="col-8 d-inline-flex align-items-center">
-                        <div class="form-check"> <input class="form-check-input" type="checkbox" value=""
-                                id="flexCheckDefault"> <label class="form-check-label" for="flexCheckDefault">
-                                Remember Me
-                            </label> </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="d-grid gap-2"> <button type="submit" class="btn btn-primary">Masuk</button>
+                <div class="col-lg-4 p-auto m-auto">
+                    <div class="auth-form-light px-5 px-sm-5">
+                        <div class="brand-logo text-center">
+                            <img src="{{ asset('assets/img/LogoJMTI.png') }}" alt="logo">
+                            <h6 class="text-center mt-2">Sistem Informasi Layanan Akademik</h6>
                         </div>
+                        <form class="pt-3" method="POST" action="{{ route('login') }}">
+                            @csrf
+                            <div class="form-group">
+                                <input type="text"
+                                    class="form-control form-control-lg @error('identifier') is-invalid @enderror"
+                                    id="exampleInputEmail1" placeholder="Username" name="identifier"
+                                    value="{{ old('identifier') }}" required>
+                                @error('identifier')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <input type="password"
+                                    class="form-control form-control-lg @error('password') is-invalid @enderror"
+                                    id="exampleInputPassword1" placeholder="Password" name="password" required>
+                                @error('password')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="mt-3 d-grid gap-2">
+                                <button type="submit" class="btn btn-block btn-primary btn-lg auth-form-btn">Login</button>
+                            </div>
+                            <div class="my-2 d-flex justify-content-between align-items-center">
+                                <div class="form-check">
+                                    <label class="form-check-label text-muted">
+                                        <input type="checkbox" class="form-check-input"> Tetap Masuk </label>
+                                </div>
+                                <p>Lupa Password? <a href="{{ route('password.request') }}"
+                                        class="auth-link text-black">Reset</a></p>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="bg-image">
                     </div>
                 </div>
-            </form>
-            <p class="mb-1">
-                @if (Route::has('password.request'))
-                    <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                        href="{{ route('password.request') }}">
-                        {{ __('Forgot your password?') }}
-                    </a>
-                @endif
-            </p>
+                {{-- <div class="col-lg-4 p-0 m-auto left-shadow">
+                </div> --}}
+            </div>
         </div>
     </div>
 @endsection

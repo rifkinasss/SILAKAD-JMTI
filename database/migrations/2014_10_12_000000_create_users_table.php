@@ -23,6 +23,8 @@ return new class extends Migration
             $table->enum('role', ['admin', 'tendik', 'mahasiswa']);
             $table->string('status')->default('aktif');
             $table->string('semester')->nullable();
+            $table->string('ipk', 5, 2)->nullable();
+            $table->string('sks_tempuh')->nullable();
             $table->string('program_studi')->nullable();
             $table->string('jurusan')->default('Matematika dan Teknologi Informasi');
             $table->string('no_hp', 13)->unique()->nullable();
@@ -35,7 +37,7 @@ return new class extends Migration
 
         DB::table('users')->insert([
             'nama_lengkap' => 'Admin SILAKAD JMTI',
-            'email' => 'admin@silakad-jmti.itk.ac.id',
+            'email' => 'admin@silakad-jmti.my.id',
             'role' => 'admin',
             'password' => Hash::make('password'),
             'created_at' => now(),

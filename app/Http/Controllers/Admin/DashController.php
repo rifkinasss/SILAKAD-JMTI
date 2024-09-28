@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
 use App\Models\User;
+use App\Imports\MhsImport;
+use Illuminate\Http\Request;
+use App\Imports\TendikImport;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 
 class DashController extends Controller
 {
@@ -19,8 +22,9 @@ class DashController extends Controller
     // Controller Mahasiswa
     public function indexMahasiswa()
     {
+        $title = 'Mahasiswa';
         $mahasiswas = User::where('role', 'mahasiswa')->get();
-        return view('admin.mahasiswa.index', compact('mahasiswas'));
+        return view('admin.mahasiswa.index', compact('mahasiswas', 'title'));
     }
 
     public function storeMahasiswa(Request $request)
@@ -30,6 +34,7 @@ class DashController extends Controller
                 'nama_lengkap' => $request->nama_lengkap,
                 'nim' => $request->nim,
                 'email' => $request->email,
+                'role' => 'mahasiswa',
                 'program_studi' => $request->program_studi,
                 'password' => bcrypt($request->password)
             ]);
@@ -63,12 +68,24 @@ class DashController extends Controller
         }
     }
 
+    public function deleteMahasiswa($id)
+    {
+        $mahasiswa = User::find($id);
+        if ($mahasiswa) {
+            $mahasiswa->delete();
+            return redirect()->route('indexMahasiswa')->with('success', 'Mahasiswa deleted successfully');
+        } else {
+            return redirect()->route('indexMahasiswa')->with('error', 'Mahasiswa not found');
+        }
+    }
+
 
     // Controller Tenaga Kependidikan
     public function indexTendik()
     {
+        $title = 'Tenaga Kependidikan';
         $tendiks = User::where('role', 'tendik')->get();
-        return view('admin.tendik.index', compact('tendiks'));
+        return view('admin.tendik.index', compact('tendiks', 'title'));
     }
 
     public function storeTendik(Request $request)
@@ -108,8 +125,27 @@ class DashController extends Controller
     public function deleteTendik($id)
     {
         $tendik = User::find($id);
-        $tendik->delete();
 
-        return redirect()->route('indexTendik');
+        if ($tendik) {
+            $tendik->delete();
+            return redirect()->route('indexTendik')->with('success', 'Tendik deleted successfully');
+        } else {
+            return redirect()->route('indexTendik')->with('error', 'Tendik not found');
+        }
+    }
+
+    public function Mhsimport(Request $request)
+    {
+        $file = $request->file('file');
+        Excel::import(new MhsImport, $file);
+
+        return back()->with('success', 'Upload Mahasiswa Berhasil.');
+    }
+    public function Tendikimport(Request $request)
+    {
+        $file = $request->file('file');
+        Excel::import(new TendikImport, $file);
+
+        return back()->with('success', 'Users imported successfully.');
     }
 }

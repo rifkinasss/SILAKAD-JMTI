@@ -84,7 +84,8 @@ class LoginController extends Controller
                 return redirect('/login')->with('error', 'Unauthorized access detected. Please contact support.');
             }
         } else {
-            return redirect('/login')->with('error', 'Invalid credentials');
+            $errors = ['identifier' => 'Username atau Password salah!', 'password' => 'Username atau Password salah!'];
+            return redirect('/login')->withErrors($errors)->withInput();
         }
     }
 }

@@ -1,5 +1,5 @@
 $(function () {
-    $("#example2").DataTable({
+    $("#user-admin").DataTable({
         paging: true,
         lengthChange: false,
         searching: true,

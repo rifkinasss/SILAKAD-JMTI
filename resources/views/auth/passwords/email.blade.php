@@ -1,39 +1,44 @@
 @extends('layouts.login')
 
 @section('login')
-    @if (session('status'))
-        <div class="mb-4 font-medium text-sm text-green-600">
-            {{ session('status') }}
-        </div>
-    @endif
-    <div class="card card-outline card-primary">
-        <div class="card-header">
-            <a href="http://s.itk.ac.id/LayananJMTI"
-                class="link-dark text-center link-offset-2 link-opacity-100 link-opacity-50-hover"
-                style="text-decoration: none;">
-                <h1 class="mb-0" style="text-decoration: none;"> <img src="{{ asset('assets/img/LogoJMTI.png') }}"
-                        alt="Logo JMTI" height="50px">
-                    SILAKAD JMTI
-                </h1>
-            </a>
-        </div>
-        <div class="card-body login-card-body">
-            <p class="login-box-msg">Silakan untuk memasukkan email itk</p>
-            <form action="{{ route('password.email') }}" method="POST">
-                @csrf
-                <div class="input-group mb-3">
-                    <div class="form-floating"> <input id="loginEmail" type="email" name="email" class="form-control"
-                            value="{{ old('email') }}" placeholder=""> <label for="loginEmail">Email</label> </div>
-                    <div class="input-group-text"> <span class="bi bi-envelope"></span> </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="d-grid gap-2"> <button type="submit" class="btn btn-primary">Email Password Reset
+    <div class="content-wrapper d-flex align-items-center auth px-0">
+        <div class="row w-100 mx-0 rounded-5">
+            <div class="col-lg-4 mx-auto">
+                <div class="auth-form-light text-left py-5 px-4 px-sm-5">
+                    <div class="brand-logo text-center">
+                        <img src="{{ asset('assets/img/logoJMTI.png') }}" alt="logo" height="100px" width="200px">
+                        <p>Sistem Layanan Informasi Akademik</p>
+                    </div>
+                    @if (session('status'))
+                        <div class="mb-4 font-medium text-sm text-green-600">
+                            {{ session('status') }}
+                        </div>
+                    @endif
+                    @if (session('error'))
+                        <div class="mb-4 font-medium text-sm text-red-600">
+                            {{ session('error') }}
+                        </div>
+                    @endif
+                    <form class="pt-2" method="POST" action="{{ route('password.email') }}">
+                        @csrf
+                        <div class="form-group">
+                            <input type="text"
+                                class="form-control rounded-5 form-control-lg @error('email') is-invalid @enderror"
+                                id="email" placeholder="Email" name="email" value="{{ old('email') }}" required>
+                            @error('email')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="mt-2 d-grid gap-2">
+                            <button class="btn btn-block btn-primary rounded-5 btn-lg fw-medium auth-form-btn"
+                                type="submit">Email Password Reset
                                 Link</button>
                         </div>
-                    </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 @endsection

@@ -1,55 +1,40 @@
 @extends('admin.layouts.app')
 
 @section('content')
-    <div class="app-content-header">
+    <div class="content-wrapper">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-sm-6">
+                <div class="col-sm-12">
                     <h3 class="mb-0">Data Tenaga Kependidikan</h3>
-                </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-end">
-                        <li class="breadcrumb-item"><a href="{{ url('dashboard-admin') }}">Home</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">
-                            Data Tenaga Kependidikan
-                        </li>
-                    </ol>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="container-fluid mt-3">
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
+                    <div class="container mt-3">
+                        @if (session('success'))
+                            <div class="alert alert-success">
+                                {{ session('success') }}
+                            </div>
+                        @endif
 
-        @if (session('error'))
-            <div class="alert alert-danger">
-                {{ session('error') }}
-            </div>
-        @endif
-    </div>
-    <div class="app-content">
-        <div class="container-fluid">
-            <div class="row">
+                        @if (session('error'))
+                            <div class="alert alert-danger">
+                                {{ session('error') }}
+                            </div>
+                        @endif
+                    </div>
+                </div>
                 <div class="card">
-                    <div class="card-header">
-                        <div class="row">
-                            <h3 class="card-title mb-3">Data Tenaga Kependidikan</h1>
-                                <div class="col-md-6">
-                                    <a href="#" type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                                        data-bs-target="#tambahModal">
-                                        <i class="bi bi-person-add"></i> Tambah
-                                    </a>
-                                    <a href="{{ url('dashboard-admin/tenaga-kependidikan/import') }}" type="button"
-                                        class="btn btn-success btn-sm"><i class="bi bi-box-arrow-right"></i> Import</a>
-                                </div>
+                    <div class="container mt-4 pl-3">
+                        <div class="col-md-6">
+                            <a href="#" type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#tambahModal">
+                                <i class="bi bi-person-add"></i> Tambah
+                            </a>
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#uploadExcelModal"
+                                class="btn btn-secondary btn-sm">
+                                <i class="bi bi-upload"></i> Import
+                            </a>
                         </div>
                     </div>
                     <div class="card-body">
-                        <table id="example2" class="table table-bordered table-striped">
+                        <table id="user-admin" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
                                     <th>NO</th>
@@ -77,8 +62,9 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <a href="#" type="button" class="btn btn-warning" data-bs-toggle="modal"
-                                                data-bs-target="#editModal" onclick="openEditModal({{ $tendik }})">
+                                            <a href="#" type="button" class="btn btn-sm btn-warning"
+                                                data-bs-toggle="modal" data-bs-target="#editModal"
+                                                onclick="openEditModal({{ $tendik }})">
                                                 <i class="bi bi-pencil-square"></i>
                                             </a>
                                             <form
@@ -86,7 +72,7 @@
                                                 method="POST" style="display:inline;" id="deleteForm{{ $tendik->id }}">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger deleteTendik"
+                                                <button type="submit" class="btn btn-sm btn-danger deleteTendik"
                                                     data-id="{{ $tendik->id }}">
                                                     <i class="bi bi-trash3-fill"></i>
                                                 </button>
@@ -95,16 +81,6 @@
                                     </tr>
                                 @endforeach
                             </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th>NO</th>
-                                    <th>Nama</th>
-                                    <th>NIM</th>
-                                    <th>Email</th>
-                                    <th>Status</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -186,6 +162,39 @@
                             <div class="col-auto">
                                 <button type="submit" class="btn btn-primary">Simpan</button>
                             </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Modal Import --}}
+    <div class="modal fade" id="uploadExcelModal" tabindex="-1" role="dialog" aria-labelledby="uploadExcelModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="uploadExcelModalLabel">Upload Users via Excel
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('tendikimport') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="form-group">
+                            <label for="excelFile">Upload Excel File</label>
+                            <input type="file" class="form-control" id="excelFile" name="file"
+                                accept=".xls,.xlsx"required>
+                        </div>
+                        <div>
+                            <h6>Template dapat di unduh : <a href="{{ asset('excel/tendik/user.xlsx') }}"
+                                    download>Template
+                                    User</a></h6>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Upload</button>
                         </div>
                     </form>
                 </div>
